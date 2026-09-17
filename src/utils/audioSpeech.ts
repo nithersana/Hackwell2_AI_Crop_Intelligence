@@ -49,3 +49,85 @@ export function stopSpeaking(): void {
 
 export const stopSpeech = stopSpeaking;
 
+// Speech Recognition (Speech-to-Text) helpers
+export function isSpeechRecognitionSupported(): boolean {
+  if (typeof window === 'undefined') return false;
+  return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+}
+
+export interface SpeechRecognizerHandlers {
+  onStart?: () => void;
+  onResult?: (text: string, isFinal: boolean) => void;
+  onError?: (error: string) => void;
+  onEnd?: () => void;
+}
+
+export function startSpeechListening(
+  lang: 'en' | 'ta' | 'hi',
+  handlers: SpeechRecognizerHandlers
+): { stop: () => void } | null {
+  if (!isSpeechRecognitionSupported()) {
+    handlers.onError?.('Speech recognition is not supported in this browser.');
+    return null;
+  }
+
+  const SpeechRecognitionClass = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  const recognition = new SpeechRecognitionClass();
+
+  recognition.continuous = false;
+  recognition.interimResults = true;
+
+  if (lang === 'ta') {
+    recognition.lang = 'ta-IN';
+  } else if (lang === 'hi') {
+    recognition.lang = 'hi-IN';
+  } else {
+    recognition.lang = 'en-IN';
+  }
+
+  recognition.onstart = () => {
+    handlers.onStart?.();
+  };
+
+  recognition.onresult = (event: any) => {
+    let interim = '';
+    let final = '';
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      const transcript = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        final += transcript;
+      } else {
+        interim += transcript;
+      }
+    }
+    const text = final || interim;
+    if (text) {
+      handlers.onResult?.(text, Boolean(final));
+    }
+  };
+
+  recognition.onerror = (event: any) => {
+    console.warn('Speech recognition error event:', event);
+    handlers.onError?.(event.error || 'Speech recognition error');
+  };
+
+  recognition.onend = () => {
+    handlers.onEnd?.();
+  };
+
+  try {
+    recognition.start();
+    return {
+      stop: () => {
+        try {
+          recognition.stop();
+        } catch {}
+      }
+    };
+  } catch (err) {
+    handlers.onError?.(String(err));
+    return null;
+  }
+}
+
+

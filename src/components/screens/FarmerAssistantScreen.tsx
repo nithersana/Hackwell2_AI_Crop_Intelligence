@@ -3,6 +3,7 @@ import {
   Sparkles, 
   Send, 
   Mic, 
+  MicOff,
   Volume2, 
   VolumeX, 
   Leaf, 
@@ -25,7 +26,7 @@ import {
 import { Language, TRANSLATIONS } from '../../data/translations';
 import { SampleLeafImage, CropScanRecord } from '../../types';
 import { ASSISTANT_FAQ } from '../../data/cropGuardData';
-import { speakText, stopSpeaking } from '../../utils/audioSpeech';
+import { speakText, stopSpeaking, startSpeechListening, isSpeechRecognitionSupported } from '../../utils/audioSpeech';
 import { getStoredCropScans } from '../../data/cropScanHistoryData';
 
 interface FarmerAssistantScreenProps {
@@ -88,7 +89,16 @@ export const FarmerAssistantScreen: React.FC<FarmerAssistantScreenProps> = ({
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceStatus, setVoiceStatus] = useState<string | null>(null);
+  const activeRecognizerRef = useRef<{ stop: () => void } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    return () => {
+      activeRecognizerRef.current?.stop();
+    };
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -368,10 +378,89 @@ export const FarmerAssistantScreen: React.FC<FarmerAssistantScreenProps> = ({
   };
 
   const handleVoiceInput = () => {
-    const voicePrompt = language === 'ta'
-      ? 'என் தக்காளி இலையில் பழுப்பு நிற புள்ளிகள் உள்ளன. நான் என்ன செய்ய வேண்டும்?'
-      : 'My tomato leaves have brown spots. What should I do?';
-    setInput(voicePrompt);
+    if (isListening) {
+      activeRecognizerRef.current?.stop();
+      setIsListening(false);
+      setVoiceStatus(null);
+      return;
+    }
+
+    if (!isSpeechRecognitionSupported()) {
+      const voicePrompt = language === 'ta'
+        ? 'என் தக்காளி இலையில் பழுப்பு நிற புள்ளிகள் உள்ளன. நான் என்ன செய்ய வேண்டும்?'
+        : 'My tomato leaves have brown spots. What should I do?';
+      setInput(voicePrompt);
+      setVoiceStatus(
+        language === 'ta'
+          ? 'உங்கள் உலாவியில் நேரடி குரல் அறிதல் ஆதரிக்கப்படவில்லை. மாதிரி கேள்வி அமைக்கப்பட்டது.'
+          : 'Speech recognition is not supported in this browser. Inserted sample query.'
+      );
+      setTimeout(() => setVoiceStatus(null), 4000);
+      return;
+    }
+
+    setVoiceStatus(
+      language === 'ta'
+        ? '🎙️ கேட்கிறது... இப்போது உங்கள் கேள்வியைப் பேசுங்கள்...'
+        : '🎙️ Listening... speak your crop question now...'
+    );
+
+    let recordedText = '';
+
+    const recognizer = startSpeechListening(language, {
+      onStart: () => {
+        setIsListening(true);
+      },
+      onResult: (text, isFinal) => {
+        recordedText = text;
+        setInput(text);
+        if (isFinal) {
+          setVoiceStatus(
+            language === 'ta' ? '✅ குரல் பெறப்பட்டது!' : '✅ Voice captured!'
+          );
+        }
+      },
+      onError: (err) => {
+        console.warn('Speech recognition error:', err);
+        setIsListening(false);
+        activeRecognizerRef.current = null;
+        if (err === 'not-allowed') {
+          setVoiceStatus(
+            language === 'ta'
+              ? 'மைக் அணுகல் மறுக்கப்பட்டது. உலாவியில் மைக் அனுமதியை இயக்கவும்.'
+              : 'Microphone access denied. Please allow microphone in browser.'
+          );
+        } else if (err === 'no-speech') {
+          setVoiceStatus(
+            language === 'ta'
+              ? 'குரல் கேட்கவில்லை. மீண்டும் மைக்கை தொட்டு பேசவும்.'
+              : 'No voice detected. Please tap mic again to speak.'
+          );
+        } else {
+          setVoiceStatus(
+            language === 'ta' ? `குரல் பிழை: ${err}` : `Voice error: ${err}`
+          );
+        }
+        setTimeout(() => setVoiceStatus(null), 4000);
+      },
+      onEnd: () => {
+        setIsListening(false);
+        activeRecognizerRef.current = null;
+        if (recordedText.trim()) {
+          setVoiceStatus(
+            language === 'ta' ? 'பதில் பெறப்படுகிறது...' : 'Submitting question...'
+          );
+          setTimeout(() => {
+            handleSend(recordedText.trim());
+            setVoiceStatus(null);
+          }, 300);
+        } else {
+          setTimeout(() => setVoiceStatus(null), 2500);
+        }
+      }
+    });
+
+    activeRecognizerRef.current = recognizer;
   };
 
   return (
@@ -582,6 +671,28 @@ export const FarmerAssistantScreen: React.FC<FarmerAssistantScreenProps> = ({
       {/* INPUT BAR WITH VOICE & FILE UPLOAD                            */}
       {/* ------------------------------------------------------------- */}
       <div className="pt-1">
+        {voiceStatus && (
+          <div className={`mb-2 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-between gap-2 shadow-xs transition-all ${
+            isListening 
+              ? 'bg-rose-50 text-rose-800 border border-rose-300 animate-pulse' 
+              : 'bg-emerald-50 text-emerald-900 border border-emerald-200'
+          }`}>
+            <div className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isListening ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'}`} />
+              <span>{voiceStatus}</span>
+            </div>
+            {isListening && (
+              <button
+                type="button"
+                onClick={handleVoiceInput}
+                className="px-2 py-0.5 rounded-md bg-rose-200/80 hover:bg-rose-300 text-rose-900 text-[11px] font-bold cursor-pointer transition-colors shrink-0"
+              >
+                {language === 'ta' ? 'நிறுத்து (Stop)' : 'Stop'}
+              </button>
+            )}
+          </div>
+        )}
+
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -602,10 +713,18 @@ export const FarmerAssistantScreen: React.FC<FarmerAssistantScreenProps> = ({
           <button
             type="button"
             onClick={handleVoiceInput}
-            className="p-3.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white cursor-pointer transition-colors shrink-0 shadow-xs"
-            title={language === 'ta' ? 'குரல் உள்ளீடு' : 'Voice Query'}
+            className={`p-3.5 rounded-2xl text-white cursor-pointer transition-all shrink-0 shadow-xs ${
+              isListening
+                ? 'bg-rose-600 hover:bg-rose-700 ring-4 ring-rose-200 animate-pulse scale-105'
+                : 'bg-amber-500 hover:bg-amber-600'
+            }`}
+            title={
+              isListening
+                ? (language === 'ta' ? 'குரல் பதிவை நிறுத்தவும்' : 'Stop Listening')
+                : (language === 'ta' ? 'குரல் மூலம் பேசவும் (Voice Query)' : 'Speak your question (Voice Query)')
+            }
           >
-            <Mic className="w-5 h-5" />
+            {isListening ? <MicOff className="w-5 h-5 animate-bounce" /> : <Mic className="w-5 h-5" />}
           </button>
 
           {/* Leaf photo upload button directly in chat */}

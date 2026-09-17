@@ -74,8 +74,10 @@ export function startSpeechListening(
   const SpeechRecognitionClass = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
   const recognition = new SpeechRecognitionClass();
 
-  recognition.continuous = false;
+  // continuous = true ensures browser does not cut off after 1 second of silence
+  recognition.continuous = true;
   recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
 
   if (lang === 'ta') {
     recognition.lang = 'ta-IN';
@@ -85,6 +87,8 @@ export function startSpeechListening(
     recognition.lang = 'en-IN';
   }
 
+  let hasEnded = false;
+
   recognition.onstart = () => {
     handlers.onStart?.();
   };
@@ -92,33 +96,51 @@ export function startSpeechListening(
   recognition.onresult = (event: any) => {
     let interim = '';
     let final = '';
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      const transcript = event.results[i][0].transcript;
-      if (event.results[i].isFinal) {
-        final += transcript;
-      } else {
-        interim += transcript;
+
+    for (let i = 0; i < event.results.length; ++i) {
+      const res = event.results[i];
+      if (res && res[0]) {
+        if (res.isFinal) {
+          final += res[0].transcript + ' ';
+        } else {
+          interim += res[0].transcript;
+        }
       }
     }
-    const text = final || interim;
-    if (text) {
-      handlers.onResult?.(text, Boolean(final));
+
+    const currentText = (final + interim).trim();
+    if (currentText) {
+      handlers.onResult?.(currentText, Boolean(final.trim()));
     }
   };
 
   recognition.onerror = (event: any) => {
-    console.warn('Speech recognition error event:', event);
-    handlers.onError?.(event.error || 'Speech recognition error');
+    console.warn('Speech recognition event:', event.error);
+    // Ignore no-speech warning so the microphone stays open while user speaks
+    if (event.error === 'no-speech') {
+      return;
+    }
+    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+      hasEnded = true;
+      handlers.onError?.('not-allowed');
+      return;
+    }
+    if (event.error !== 'aborted') {
+      handlers.onError?.(event.error || 'Speech error');
+    }
   };
 
   recognition.onend = () => {
-    handlers.onEnd?.();
+    if (!hasEnded) {
+      handlers.onEnd?.();
+    }
   };
 
   try {
     recognition.start();
     return {
       stop: () => {
+        hasEnded = true;
         try {
           recognition.stop();
         } catch {}

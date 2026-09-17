@@ -381,7 +381,13 @@ export const FarmerAssistantScreen: React.FC<FarmerAssistantScreenProps> = ({
     if (isListening) {
       activeRecognizerRef.current?.stop();
       setIsListening(false);
-      setVoiceStatus(null);
+      if (input.trim()) {
+        setVoiceStatus(language === 'ta' ? 'கேள்வி அனுப்பப்படுகிறது...' : 'Sending question...');
+        handleSend(input.trim());
+        setTimeout(() => setVoiceStatus(null), 2000);
+      } else {
+        setVoiceStatus(null);
+      }
       return;
     }
 
@@ -401,8 +407,8 @@ export const FarmerAssistantScreen: React.FC<FarmerAssistantScreenProps> = ({
 
     setVoiceStatus(
       language === 'ta'
-        ? '🎙️ கேட்கிறது... இப்போது உங்கள் கேள்வியைப் பேசுங்கள்...'
-        : '🎙️ Listening... speak your crop question now...'
+        ? '🎙️ கேட்கிறது... மைக் அருகில் உங்கள் கேள்வியைப் பேசுங்கள்...'
+        : '🎙️ Listening... speak your crop question near your mic...'
     );
 
     let recordedText = '';
@@ -411,49 +417,52 @@ export const FarmerAssistantScreen: React.FC<FarmerAssistantScreenProps> = ({
       onStart: () => {
         setIsListening(true);
       },
-      onResult: (text, isFinal) => {
+      onResult: (text, _isFinal) => {
         recordedText = text;
         setInput(text);
-        if (isFinal) {
-          setVoiceStatus(
-            language === 'ta' ? '✅ குரல் பெறப்பட்டது!' : '✅ Voice captured!'
-          );
-        }
+        setVoiceStatus(
+          language === 'ta' 
+            ? `🎙️ "${text}" (பேசி முடித்ததும் நிறுத்து அல்லது அனுப்பு தொடவும்)` 
+            : `🎙️ "${text}" (tap mic or Send when done)`
+        );
       },
       onError: (err) => {
-        console.warn('Speech recognition error:', err);
-        setIsListening(false);
-        activeRecognizerRef.current = null;
+        console.warn('Speech recognition notice:', err);
         if (err === 'not-allowed') {
+          setIsListening(false);
+          activeRecognizerRef.current = null;
           setVoiceStatus(
             language === 'ta'
-              ? 'மைக் அணுகல் மறுக்கப்பட்டது. உலாவியில் மைக் அனுமதியை இயக்கவும்.'
-              : 'Microphone access denied. Please allow microphone in browser.'
+              ? 'மைக் அனுமதி மறுக்கப்பட்டுள்ளது. உலாவியில் மைக் அனுமதியை இயக்கவும்.'
+              : 'Microphone permission blocked. Please allow mic access in browser settings.'
           );
+          setTimeout(() => setVoiceStatus(null), 5000);
         } else if (err === 'no-speech') {
           setVoiceStatus(
             language === 'ta'
-              ? 'குரல் கேட்கவில்லை. மீண்டும் மைக்கை தொட்டு பேசவும்.'
-              : 'No voice detected. Please tap mic again to speak.'
+              ? '🎙️ கேட்கிறது... மைக் அருகில் தெளிவாகப் பேசுங்கள்...'
+              : '🎙️ Listening... please speak near your microphone...'
           );
         } else {
+          setIsListening(false);
+          activeRecognizerRef.current = null;
           setVoiceStatus(
-            language === 'ta' ? `குரல் பிழை: ${err}` : `Voice error: ${err}`
+            language === 'ta' ? `குரல் குறிப்பு: ${err}` : `Voice note: ${err}`
           );
+          setTimeout(() => setVoiceStatus(null), 4000);
         }
-        setTimeout(() => setVoiceStatus(null), 4000);
       },
       onEnd: () => {
         setIsListening(false);
         activeRecognizerRef.current = null;
         if (recordedText.trim()) {
           setVoiceStatus(
-            language === 'ta' ? 'பதில் பெறப்படுகிறது...' : 'Submitting question...'
+            language === 'ta' ? '✅ கேள்வி பெறப்பட்டது! பதில் தயாராகிறது...' : '✅ Question captured! Preparing answer...'
           );
           setTimeout(() => {
             handleSend(recordedText.trim());
             setVoiceStatus(null);
-          }, 300);
+          }, 350);
         } else {
           setTimeout(() => setVoiceStatus(null), 2500);
         }

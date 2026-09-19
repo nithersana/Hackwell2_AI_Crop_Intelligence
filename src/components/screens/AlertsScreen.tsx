@@ -403,9 +403,6 @@ export const AlertsScreen: React.FC<AlertsScreenProps> = ({
               <Activity className="w-3.5 h-3.5 text-red-600 animate-pulse" />
               <span>{language === 'ta' ? 'தானியங்கி முன்னெச்சரிக்கை அமைப்பு' : 'Automated Early Warning System'}</span>
             </span>
-            <span className="text-xs text-stone-500 font-mono bg-stone-100 px-2 py-0.5 rounded-md">
-              Hackwell 2.0 Engine
-            </span>
           </div>
 
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-stone-900 font-serif tracking-tight">

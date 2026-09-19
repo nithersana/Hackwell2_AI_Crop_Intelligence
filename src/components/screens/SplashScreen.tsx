@@ -26,14 +26,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 
   return (
     <div id="screen-splash" className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-8 max-w-4xl mx-auto text-center">
-      {/* Hackwell 2.0 Badge */}
-      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-semibold uppercase tracking-wider mb-6 shadow-xs">
-        <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span>{t.hackwellBadge}</span>
-        <span className="text-emerald-500 font-mono">•</span>
-        <span className="text-emerald-700">Problem Statement 2.0</span>
-      </div>
-
       {/* Main Logo & Leaf Graphic */}
       <div className="relative mb-6">
         <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-br from-emerald-600 via-green-700 to-[#1b5e20] text-white flex items-center justify-center shadow-xl shadow-emerald-900/20 border-4 border-emerald-100 mx-auto">

@@ -367,7 +367,7 @@ class CropGuardSeverityEstimator:
               1
             </span>
             <h3 className="font-bold text-stone-900 text-sm sm:text-base">
-              {language === 'ta' ? '4 நிலைகள் சோதனை (Hackathon Prototype Selector):' : 'Select Health Classification Level:'}
+              {language === 'ta' ? '4 நிலைகள் சோதனை:' : 'Select Health Classification Level:'}
             </h3>
           </div>
           <span className="text-xs text-stone-500 font-medium">
@@ -927,9 +927,6 @@ class CropGuardSeverityEstimator:
               <Terminal className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400">
-                Hackathon Prototype Architecture
-              </span>
               <h4 className="text-base font-bold text-white font-serif">
                 Python & Computer Vision Model Pipeline
               </h4>
@@ -970,7 +967,7 @@ class CropGuardSeverityEstimator:
                 activeCodeTab === 'pytorch_unet' ? pytorchUnetSnippet : mathPipelineSnippet
               )}
               className="p-2 rounded-xl bg-stone-800 text-stone-300 hover:text-white hover:bg-stone-700 transition-colors cursor-pointer flex items-center gap-1 text-xs font-mono"
-              title="Copy Python Code for Hackathon Demo"
+              title="Copy Python Code"
             >
               {copiedCode ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
               <span className="hidden sm:inline">{copiedCode ? 'Copied' : 'Copy'}</span>

@@ -99,12 +99,7 @@ export const ScreenSelectorModal: React.FC<ScreenSelectorModalProps> = ({
               📱
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs uppercase font-bold bg-emerald-700 px-2 py-0.5 rounded text-emerald-200">
-                  Hackwell 2.0
-                </span>
-                <span className="text-xs text-emerald-100 font-medium">All 20 Screens Index</span>
-              </div>
+              <p className="text-xs text-emerald-100 font-medium mb-0.5">All 20 Screens Index</p>
               <h3 className="text-lg sm:text-xl font-bold font-serif">
                 {language === 'ta' ? 'அனைத்து 20 திரைகள் வழிகாட்டி' : 'CropGuard AI - Complete 20 Screens'}
               </h3>

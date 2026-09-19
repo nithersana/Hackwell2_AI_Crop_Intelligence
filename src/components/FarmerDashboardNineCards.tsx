@@ -115,7 +115,7 @@ export const FarmerDashboardNineCards: React.FC<FarmerDashboardNineCardsProps> =
             </h2>
             <p className="text-xs text-stone-500 font-medium">
               {language === 'ta' 
-                ? 'Hackwell 2.0 முன் எச்சரிக்கை மற்றும் பயிர் பாதுகாப்பு வழிகாட்டல்' 
+                ? 'முன் எச்சரிக்கை மற்றும் பயிர் பாதுகாப்பு வழிகாட்டல்' 
                 : language === 'hi'
                 ? 'शीघ्र कीट एवं रोग रोकथाम प्रणाली'
                 : 'Early Pest & Disease Prevention Sentinel'}

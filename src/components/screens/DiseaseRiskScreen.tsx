@@ -71,7 +71,7 @@ export const DiseaseRiskScreen: React.FC<DiseaseRiskScreenProps> = ({
   // -------------------------------------------------------------
   // BENCHMARK PRESET LOADER (Exact example from user prompt)
   // -------------------------------------------------------------
-  const loadHackwellBenchmark = () => {
+  const loadBenchmarkPreset = () => {
     setCrop('Tomato');
     setTemperatureC(28);
     setHumidityPercent(84);
@@ -245,9 +245,9 @@ export const DiseaseRiskScreen: React.FC<DiseaseRiskScreenProps> = ({
     setTimeout(() => setCopiedCode(false), 2000);
   };
 
-  // Hackathon Prototype Python Code Snippets
+  // Prototype Python Code Snippets
   const pythonXGBoostCode = `# ============================================================
-# Hackwell 2.0: Adaptive AI Crop Risk Prediction Engine
+# Adaptive AI Crop Risk Prediction Engine
 # Multimodal Early Outbreak Predictor (Python + XGBoost)
 # ============================================================
 import numpy as np
@@ -327,13 +327,13 @@ def train_adaptive_risk_model():
 
     return model, X.columns.tolist()
 
-# Run inference for the Hackwell 2.0 Benchmark Query:
+# Run inference for the Benchmark Query:
 # Tomato, Humidity: 84%, Temp: 28C, Rain Prob: 72%, Stage: Flowering
 # Output -> Predicted Fungal Disease Risk: 81.2% (HIGH RISK)
 `;
 
   const fastapiInferCode = `# ============================================================
-# Hackwell 2.0: FastAPI Microservice for Real-Time Edge Inference
+# FastAPI Microservice for Real-Time Edge Inference
 # Endpoint: POST /api/predict-crop-risk
 # ============================================================
 from fastapi import FastAPI
@@ -423,7 +423,7 @@ def calculate_vpd(temperature_c: float, relative_humidity: float) -> float:
           <div className="flex items-center gap-2 mb-1">
             <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-red-100 text-red-800 text-xs font-bold uppercase tracking-wider">
               <Activity className="w-3.5 h-3.5 text-red-700" />
-              <span>Hackwell 2.0 AI Architecture</span>
+              <span>AI Architecture</span>
             </span>
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
               <Sparkles className="w-3 h-3 text-emerald-700" />
@@ -454,10 +454,10 @@ def calculate_vpd(temperature_c: float, relative_humidity: float) -> float:
 
           {/* Quick benchmark loader */}
           <button
-            id="load-hackwell-benchmark-btn"
-            onClick={loadHackwellBenchmark}
+            id="load-benchmark-btn"
+            onClick={loadBenchmarkPreset}
             className="py-2.5 px-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
-            title="Load Hackwell 2.0 Benchmark Example"
+            title="Load Benchmark Example"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>{language === 'ta' ? 'மாதிரி அளவீடு (Benchmark)' : 'Load Benchmark'}</span>
@@ -562,7 +562,7 @@ def calculate_vpd(temperature_c: float, relative_humidity: float) -> float:
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-900/60 text-red-200 text-xs font-bold uppercase tracking-wider border border-red-700/60 mb-1.5">
               <Flame className="w-3.5 h-3.5 text-red-400 animate-pulse" />
-              <span>{language === 'ta' ? 'அதிக ஆபத்து முன்கணிப்பு' : 'Hackwell 2.0 Benchmark Prediction Output'}</span>
+              <span>{language === 'ta' ? 'அதிக ஆபத்து முன்கணிப்பு' : 'Benchmark Prediction Output'}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black font-serif text-white">
               {crop} • {prediction.primaryDiseaseTarget}
@@ -761,7 +761,7 @@ def calculate_vpd(temperature_c: float, relative_humidity: float) -> float:
           </div>
 
           <button
-            onClick={loadHackwellBenchmark}
+            onClick={loadBenchmarkPreset}
             className="text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 cursor-pointer bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 self-start sm:self-auto"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -975,10 +975,10 @@ def calculate_vpd(temperature_c: float, relative_humidity: float) -> float:
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-white font-serif">
-                Realistic Machine Learning Approach for a Hackathon Prototype
+                Realistic Machine Learning Approach
               </h3>
               <p className="text-xs text-stone-400">
-                Architecture, feature vector engineering, and runnable code for Hackwell 2.0 judges.
+                Architecture, feature vector engineering, and runnable code for evaluation.
               </p>
             </div>
           </div>

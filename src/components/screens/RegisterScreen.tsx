@@ -149,7 +149,6 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
                 <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase tracking-wider">
                   {t.screens.register}
                 </span>
-                <span className="text-[11px] text-stone-500 font-mono">Hackwell 2.0</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-black text-stone-900 font-serif tracking-tight mt-0.5">
                 {t.auth.registerTitle}

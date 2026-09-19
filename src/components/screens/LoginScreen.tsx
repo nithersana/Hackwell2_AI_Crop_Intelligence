@@ -137,7 +137,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     }
   };
 
-  // Instant Demo Login (Hackwell 2.0 Hackathon)
+  // Instant Demo Login
   const handleInstantDemoLogin = () => {
     setMobile(DEMO_FARMER.mobile);
     setPassword('farmer123');
@@ -160,9 +160,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-wider">
-                  Hackwell 2.0
-                </span>
                 <span className="text-[11px] text-stone-500 font-medium">CropGuard AI</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-black text-stone-900 font-serif tracking-tight mt-0.5">
@@ -408,7 +405,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </button>
         </div>
 
-        {/* Demo Credentials Section for Hackwell 2.0 Testing */}
+        {/* Demo Credentials Section */}
         <div className="mt-6 p-4 rounded-2xl bg-amber-50/80 border border-amber-200">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">

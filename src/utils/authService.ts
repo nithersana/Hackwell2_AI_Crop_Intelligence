@@ -4,12 +4,12 @@ const STORAGE_KEY_USERS = 'cropguard_registered_farmers';
 const STORAGE_KEY_CURRENT_USER = 'cropguard_current_farmer';
 const STORAGE_KEY_ACTIVE_OTP = 'cropguard_active_otp';
 
-// Demo farmer account as mandated by Hackwell 2.0 instructions
+// Demo farmer account
 export const DEMO_FARMER: FarmerUser = {
   id: 'demo-farmer-01',
   fullName: 'Arunachalam Murugan',
   mobile: '9876543210',
-  passwordHash: '8b06b9cb8be47c72477f', // hashed token for 'farmer123'
+  passwordHash: '6c886c36', // hashed token for 'farmer123'
   village: 'Thiruvaiyaru',
   district: 'Thanjavur',
   state: 'Tamil Nadu',
@@ -24,7 +24,7 @@ export const DEMO_FARMER: FarmerUser = {
 // Simple secure hash simulation using salt
 export function hashPassword(plain: string): string {
   let hash = 0;
-  const salted = `cg_salt_2026_${plain}_hackwell`;
+  const salted = `cg_salt_2026_${plain}_cropguard`;
   for (let i = 0; i < salted.length; i++) {
     const char = salted.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;

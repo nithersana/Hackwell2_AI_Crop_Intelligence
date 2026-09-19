@@ -4,7 +4,6 @@ export interface TranslationDict {
   // App branding
   appName: string;
   tagline: string;
-  hackwellBadge: string;
   
   // Navigation & screens
   screens: {
@@ -220,7 +219,6 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
   ta: {
     appName: "CropGuard AI (பயிர் பாதுகாப்பு)",
     tagline: "ஆரம்பகால பூச்சி மற்றும் நோய் தடுப்புக்கான தகவமைப்பு AI பயிர் நுண்ணறிவு",
-    hackwellBadge: "Hackwell 2.0 திட்டம் • உழவர் நுண்ணறிவு தளம்",
     screens: {
       splash: "தொடக்க திரை (Splash)",
       login: "உழவர் உள்நுழைவு",
@@ -288,7 +286,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
       enterOtp: "4-இலக்க OTP உள்ளிடவும்",
       verifyOtp: "OTP சரிபார்த்து உள்நுழைக",
       otpSentSuccess: "OTP வெற்றிகரமாக அனுப்பப்பட்டது (சோதனை குறியீடு: 4582)",
-      demoCredentialsNotice: "Hackwell 2.0 சோதனை உள்நுழைவு:",
+      demoCredentialsNotice: "சோதனை உள்நுழைவு விவரங்கள்:",
       demoLoginBtn: "1-கிளிக் மாதிரி உழவர் உள்நுழைவு (9876543210)",
       logout: "வெளியேறு (Logout)",
       welcomeBack: "மீண்டும் வருக"
@@ -416,7 +414,6 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
   en: {
     appName: "CropGuard AI",
     tagline: "Adaptive AI Crop Intelligence for Early Pest and Disease Prevention",
-    hackwellBadge: "Hackwell 2.0 Project • Farmer Intelligence Platform",
     screens: {
       splash: "Splash Screen",
       login: "Farmer Login",
@@ -484,7 +481,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
       enterOtp: "Enter 4-Digit OTP",
       verifyOtp: "Verify OTP & Enter",
       otpSentSuccess: "OTP sent successfully (Demo test code: 4582)",
-      demoCredentialsNotice: "Hackwell 2.0 Demo Credentials:",
+      demoCredentialsNotice: "Demo Credentials:",
       demoLoginBtn: "1-Click Demo Login (9876543210)",
       logout: "Logout",
       welcomeBack: "Welcome back"
@@ -612,7 +609,6 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
   hi: {
     appName: "CropGuard AI (फसल सुरक्षा)",
     tagline: "शुरुआती कीट और रोग रोकथाम के लिए अनुकूली एआई फसल बुद्धिमत्ता",
-    hackwellBadge: "Hackwell 2.0 परियोजना • किसान इंटेलिजेंस प्लेटफॉर्म",
     screens: {
       splash: "प्रारंभिक स्क्रीन (Splash)",
       login: "किसान लॉगिन",
@@ -680,7 +676,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
       enterOtp: "4-अंकीय ओटीपी दर्ज करें",
       verifyOtp: "ओटीपी सत्यापित कर प्रवेश करें",
       otpSentSuccess: "ओटीपी सफलतापूर्वक भेजा गया (परीक्षण कोड: 4582)",
-      demoCredentialsNotice: "Hackwell 2.0 डेमो लॉगिन विवरण:",
+      demoCredentialsNotice: "डेमो लॉगिन विवरण:",
       demoLoginBtn: "1-क्लिक डेमो किसान लॉगिन (9876543210)",
       logout: "लॉगआउट (Logout)",
       welcomeBack: "स्वागत है"

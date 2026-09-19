@@ -1,6 +1,6 @@
 {
   "name": "CropGuard AI",
-  "description": "Adaptive AI Crop Intelligence for Early Pest and Disease Prevention (Hackwell 2.0). Farmer-friendly UI/UX with bilingual Tamil & English support, multi-modal diagnostics, microclimate risk modeling, and step-by-step IPM recommendations.",
+  "description": "Adaptive AI Crop Intelligence for Early Pest and Disease Prevention. Farmer-friendly UI/UX with bilingual Tamil & English support, multi-modal diagnostics, microclimate risk modeling, and step-by-step IPM recommendations.",
   "requestFramePermissions": ["camera", "microphone"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
